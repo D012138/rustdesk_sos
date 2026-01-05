@@ -65,8 +65,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         buildLeftPane(context),
-        if (!isIncomingOnly) const VerticalDivider(width: 1),
-        if (!isIncomingOnly) Expanded(child: buildRightPane(context)),
+        //if (!isIncomingOnly) const VerticalDivider(width: 1),
+        //if (!isIncomingOnly) Expanded(child: buildRightPane(context)),
       ],
     ));
   }
@@ -93,40 +93,48 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       buildTip(context),
       if (!isOutgoingOnly) buildIDBoard(context),
       if (!isOutgoingOnly) buildPasswordBoard(context),
-      FutureBuilder<Widget>(
-        future: Future.value(
-            Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
-        builder: (_, data) {
-          if (data.hasData) {
-            if (isIncomingOnly) {
-              if (isInHomePage()) {
-                Future.delayed(Duration(milliseconds: 300), () {
-                  _updateWindowSize();
-                });
-              }
-            }
-            return data.data!;
-          } else {
-            return const Offstage();
-          }
-        },
-      ),
+
+
+      // FutureBuilder<Widget>(
+      //   future: Future.value(
+      //       Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
+      //   builder: (_, data) {
+      //     if (data.hasData) {
+      //       if (isIncomingOnly) {
+      //         if (isInHomePage()) {
+      //           Future.delayed(Duration(milliseconds: 300), () {
+      //             _updateWindowSize();
+      //           });
+      //         }
+      //       }
+      //       return data.data!;
+      //     } else {
+      //       return const Offstage();
+      //     }
+      //   },
+      // ),
+
+
       buildPluginEntry(),
     ];
-    if (isIncomingOnly) {
-      children.addAll([
-        Divider(),
-        OnlineStatusWidget(
-          onSvcStatusChanged: () {
-            if (isInHomePage()) {
-              Future.delayed(Duration(milliseconds: 300), () {
-                _updateWindowSize();
-              });
-            }
-          },
-        ).marginOnly(bottom: 6, right: 6)
-      ]);
-    }
+
+    
+    // if (isIncomingOnly) {
+    //   children.addAll([
+    //     Divider(),
+    //     OnlineStatusWidget(
+    //       onSvcStatusChanged: () {
+    //         if (isInHomePage()) {
+    //           Future.delayed(Duration(milliseconds: 300), () {
+    //             _updateWindowSize();
+    //           });
+    //         }
+    //       },
+    //     ).marginOnly(bottom: 6, right: 6)
+    //   ]);
+    // }
+
+    
     final textColor = Theme.of(context).textTheme.titleLarge?.color;
     return ChangeNotifierProvider.value(
       value: gFFI.serverModel,
@@ -693,6 +701,16 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   @override
   void initState() {
     super.initState();
+
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await windowManager.setAsFrameless();
+      await windowManager.setWindowButtonVisibility(false);
+      await windowManager.setSize(const Size(350, 450));
+      await windowManager.setMinimumSize(const Size(300, 150));
+    });
+
+    
     _updateTimer = periodic_immediate(const Duration(seconds: 1), () async {
       await gFFI.serverModel.fetchID();
       final error = await bind.mainGetError();
