@@ -709,8 +709,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
     
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await windowManager.setAsFrameless();
-      await windowManager.setWindowButtonVisibility(false);
+      // await windowManager.setAsFrameless();
+      // await windowManager.setWindowButtonVisibility(false);
       await windowManager.setSize(const Size(350, 450));
       await windowManager.setMinimumSize(const Size(300, 150));
     });
