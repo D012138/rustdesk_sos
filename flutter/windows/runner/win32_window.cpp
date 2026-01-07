@@ -277,6 +277,7 @@ void Win32Window::SetQuitOnClose(bool quit_on_close) {
 bool Win32Window::OnCreate() {
   // No-op; provided for subclasses.
 
+  MessageBoxA(window_handle_, "OnCreate 跑了", "Debug", MB_OK);
   LONG_PTR style = GetWindowLongPtr(window_handle_, GWL_STYLE);
   style &= ~WS_SYSMENU;          // 把系统菜单位清掉
   SetWindowLongPtr(window_handle_, GWL_STYLE, style);
