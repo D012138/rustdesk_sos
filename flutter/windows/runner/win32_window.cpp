@@ -276,6 +276,14 @@ void Win32Window::SetQuitOnClose(bool quit_on_close) {
 
 bool Win32Window::OnCreate() {
   // No-op; provided for subclasses.
+
+  LONG_PTR style = GetWindowLongPtr(window_handle_, GWL_STYLE);
+  style &= ~WS_SYSMENU;          // 把系统菜单位清掉
+  SetWindowLongPtr(window_handle_, GWL_STYLE, style);
+  // 让 Windows 立刻重绘非客户区
+  SetWindowPos(window_handle_, nullptr, 0, 0, 0, 0,
+               SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
+
   return true;
 }
 
